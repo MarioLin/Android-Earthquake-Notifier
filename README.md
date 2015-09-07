@@ -2,9 +2,9 @@
 
 Repository for submitting CS160 Fall 2015 programming assignments. 
 
-* Name: <FIRST NAME> <LAST NAME(S)>
-* CalNetID: <ID>
-* Email: <email>
-* Class: <CS160/CS260A>
-* Section: <101-108>
-* Favorite Color: <#HEX>
+* Name: Mario Lin
+* CalNetID: 23531468
+* Email: mario.lin@berkeley.edu
+* Class: CS160
+* Section: 101
+* Favorite Color: #0000ff
