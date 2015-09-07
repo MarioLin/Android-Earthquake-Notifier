@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">YouAnimal</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="Animals">
+        <item>Bear (Oski)</item>
+        <item>Cat</item>
+        <item>Dog</item>
+        <item>Hamster</item>
+        <item>Hippopotamus</item>
+        <item>Kangaroo</item>
+        <item>Human</item>
+    </string-array>
+
+</resources>
