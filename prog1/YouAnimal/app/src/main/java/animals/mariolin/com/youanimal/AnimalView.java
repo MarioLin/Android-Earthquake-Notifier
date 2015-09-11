@@ -2,20 +2,26 @@ package animals.mariolin.com.youanimal;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class AnimalView extends Activity {
     private Spinner compareSpinner;
     private Spinner compareToSpinner;
     private Button convertButton;
     private TextView convertedText;
+    private EditText yearsField;
+    private final AnimalConversions animalConversions = new AnimalConversions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,7 @@ public class AnimalView extends Activity {
         compareToSpinner = (Spinner) findViewById(R.id.secondSpinner);
         convertButton = (Button) findViewById(R.id.convertButton);
         convertedText = (TextView) findViewById(R.id.convertedYearsTextLabel);
+        yearsField = (EditText) findViewById(R.id.yearsField);
         convertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,9 +67,15 @@ public class AnimalView extends Activity {
     }
 
     public void displayConvertedText() {
+        int years = Integer.parseInt(yearsField.getText().toString());
         String firstAnimal = (String) compareSpinner.getSelectedItem();
         String secondAnimal = (String) compareToSpinner.getSelectedItem();
-        convertedText.setText(firstAnimal + ", " + secondAnimal);
+
+        int[] time = animalConversions.convert(firstAnimal,secondAnimal,years);
+
+        String source = years + " " + firstAnimal + " years converts to: <br>" + "<b>" + time[0] + " year(s) and " + time[1] + " month(s)</b> " + "<br>in " + secondAnimal + " age.";
+
+        convertedText.setText(Html.fromHtml(source));
     }
 
 }
