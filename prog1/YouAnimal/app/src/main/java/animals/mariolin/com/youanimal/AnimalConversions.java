@@ -30,8 +30,8 @@ public class AnimalConversions {
      * @return
      */
     public int[] convert(String firstAnimal, String secondAnimal, int years){
-        Log.v("dub", firstAnimal);
-        Log.v("dub", secondAnimal);
+//        Log.v("dub", firstAnimal);
+//        Log.v("dub", secondAnimal);
 
         double firstAnimalToHuman = conversionHash.get(firstAnimal);
         double secondAnimalToHuman = conversionHash.get(secondAnimal);
@@ -42,12 +42,8 @@ public class AnimalConversions {
             totalMonths = 0;
         }
         else{
-            Log.v("ldal", String.valueOf(yearsWithDecimal));
-
 
             totalMonths = (int) ((yearsWithDecimal-(int)yearsWithDecimal) * 12.0);
-            Log.v("ldal", String.valueOf(totalMonths));
-
         }
         int totalYears = (int)yearsWithDecimal;
 
