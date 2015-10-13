@@ -2,6 +2,7 @@ package animals.mariolin.com.yourfaultprog2;
 
 import android.app.Service;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -16,6 +17,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import org.json.*;
 
@@ -27,6 +30,7 @@ public class USGSHelper extends Service{
     private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-10-11&endtime=2015-10-12&eventtype=earthquake&orderby=time&limit=5";
     private String response = "";
     private final String TAG = "USGSService";
+    double[] coordinates = new double[3];
 
     @Override
     public void onCreate() {
@@ -73,22 +77,51 @@ public class USGSHelper extends Service{
 
 
                 try {
+
                     urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.connect();
                     InputStream in = urlConnection.getInputStream();
-
                     Scanner scanner = new Scanner(in);
+                    StringBuilder sb = new StringBuilder();
+                    Log.v(TAG, "scan");
+
                     //Scanners scan line by line: if your response is longer than 1 line, you need a loop
                     while (scanner.hasNext()) {
-                        response += scanner.nextLine(); //parses the GET request into a string
+                        sb.append(scanner.nextLine()); //parses the GET request into a string
                     }
 
-                    // parse JSON response
+//                    Log.v(TAG, sb.toString());
 
-                    JSONObject obj = new JSONObject(response);
+                    // parse JSON response
+                    JSONObject obj = new JSONObject(sb.toString());
                     JSONArray features = obj.getJSONArray("features");
+                    JSONObject properties;
+                    JSONObject geometry;
+                    double magnitude;
+                    String place;
+                    JSONArray jsonCoordinates;
+
                     for (int i = 0; i< features.length(); i ++) {
-                        continue;
+                        JSONObject earthquake = features.getJSONObject(i);
+//                        Log.v(TAG + " JSONObject", earthquake.toString());
+
+                        properties = earthquake.getJSONObject("properties");
+                        geometry = earthquake.getJSONObject("geometry");
+
+                        magnitude = properties.getDouble("mag");
+                        place = properties.getString("place");
+
+                        Log.v(TAG, String.valueOf(magnitude));
+                        Log.v(TAG, place);
+
+                        jsonCoordinates = geometry.getJSONArray("coordinates");
+
+                        for (int j = 0; j < jsonCoordinates.length();j++) {
+                            coordinates[j] = jsonCoordinates.getDouble(j);
+                        }
+
+                        Log.v(TAG, Arrays.toString(coordinates));
+
                     }
 
                 } catch (IOException e) {
