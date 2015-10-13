@@ -18,7 +18,10 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDOs1IP41RpialsVxea1jzHkloWwNXjnNY"/>
+            android:value="AIzaSyCPzQ12Lz91sjHV0AQXGQyP8ZV-SmviU1Q"/>
+        <service
+            android:name=".USGSHelper"
+            android:label="@string/app_name"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
