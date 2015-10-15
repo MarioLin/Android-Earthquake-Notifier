@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ public class MainActivity extends Activity {
     ArrayAdapter<String> listAdapter;
     MyReceiver receiver;
     private final static String TAG = "MainActivity";
+    public final static String CLICK = "Click Message";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,17 @@ public class MainActivity extends Activity {
         eqList = (ListView) findViewById(R.id.eqlist);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         eqList.setAdapter(listAdapter);
+
+        eqList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, GPSActivity.class);
+                String selectedFromList = (String) (eqList.getItemAtPosition(position));
+                intent.putExtra(CLICK,selectedFromList);
+                startActivity(intent);
+            }
+        });
+
         Log.d("main", "start");
         Intent i = new Intent(this, USGSHelper.class);
         startService(i);
