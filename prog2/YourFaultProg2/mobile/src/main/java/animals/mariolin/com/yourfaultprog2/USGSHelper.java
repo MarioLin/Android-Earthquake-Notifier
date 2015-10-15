@@ -10,6 +10,9 @@ import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.io.IOException;
@@ -27,10 +30,13 @@ import org.json.*;
  */
 public class USGSHelper extends Service{
     private GoogleApiClient mApiClient;
-    private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-10-11&endtime=2015-10-12&eventtype=earthquake&orderby=time&limit=5";
+    private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-10-12&endtime=2015-10-14&eventtype=earthquake&orderby=time&limit=5";
     private String response = "";
     private final String TAG = "USGSService";
+    public static final String ACTION = "ACTION";
     double[] coordinates = new double[3];
+    private static final String START_ACTIVITY = "/start_activity";
+
 
     @Override
     public void onCreate() {
@@ -103,7 +109,7 @@ public class USGSHelper extends Service{
 
                     for (int i = 0; i< features.length(); i ++) {
                         JSONObject earthquake = features.getJSONObject(i);
-//                        Log.v(TAG + " JSONObject", earthquake.toString());
+//                        Log.d(TAG + " JSONObject", earthquake.toString());
 
                         properties = earthquake.getJSONObject("properties");
                         geometry = earthquake.getJSONObject("geometry");
@@ -111,24 +117,32 @@ public class USGSHelper extends Service{
                         magnitude = properties.getDouble("mag");
                         place = properties.getString("place");
 
-                        Log.v(TAG, String.valueOf(magnitude));
-                        Log.v(TAG, place);
+                        Log.d(TAG, String.valueOf(magnitude));
+//                        Log.d(TAG, place);
 
                         jsonCoordinates = geometry.getJSONArray("coordinates");
 
                         for (int j = 0; j < jsonCoordinates.length();j++) {
                             coordinates[j] = jsonCoordinates.getDouble(j);
                         }
-
-                        Log.v(TAG, Arrays.toString(coordinates));
+                        mApiClient.connect(); //connect to the API client to send a message!
+                        sendMessage(START_ACTIVITY, String.valueOf(magnitude));
+                        String[] values = new String[2];
+                        values[0] = String.valueOf(magnitude);
+                        values[1] = place;
+                        Intent intent = new Intent();
+                        intent.setAction(ACTION);
+                        intent.putExtra("DATAPASSED", values);
+                        sendBroadcast(intent);
+//                        Log.d(TAG, Arrays.toString(coordinates));
 
                     }
 
                 } catch (IOException e) {
-                    Log.v(TAG, "IO Exception");
+                    Log.d(TAG, "IO Exception");
                     e.printStackTrace();
                 } catch(JSONException e) {
-                    Log.v(TAG, "JSON Exception");
+                    Log.d(TAG, "JSON Exception");
                     e.printStackTrace();
                 }finally
                  {
@@ -146,4 +160,20 @@ public class USGSHelper extends Service{
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    //how to send a message to the watchlistenerservice
+    private void sendMessage( final String path, final String text ) {
+        Log.d(TAG, "sending message");
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes( mApiClient ).await();
+                for(Node node : nodes.getNodes()) {
+                    MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(
+                            mApiClient, node.getId(), path, text.getBytes() ).await();
+                }
+            }
+        }).start();
+    }
+
 }

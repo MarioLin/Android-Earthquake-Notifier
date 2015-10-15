@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wearable.view.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/container" tools:context=".MainActivity"
-    tools:deviceIds="wear">
+    android:layout_height="match_parent" android:gravity="center" android:layout_gravity="center"
+    tools:context=".MainActivity" android:orientation="vertical" tools:deviceIds="wear_round"
+    android:background="#000000">
 
-    <TextView android:id="@+id/text" app:layout_box="all" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:text="@string/hello_world" />
+    <TextView android:id="@+id/welcome_text" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" android:text="@string/hello_msg"
+        android:textColor="#FFFFFF" />
 
-    <TextView android:id="@+id/clock" app:layout_box="all" android:layout_gravity="bottom|start"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:textColor="@android:color/white" />
+    <TextView android:id="@+id/welcome_text2" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" android:text="@string/hello_msg2"
+        android:layout_marginTop="10dp"
+        android:textColor="#FFFFFF" />
 
-</android.support.wearable.view.BoxInsetLayout>
+</LinearLayout>
+

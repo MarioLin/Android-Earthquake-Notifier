@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Your Fault Prog 2</string>
     <string name="hello_world">Hello World!</string>
-</resources>
+        <string name="hello_msg">Your Fault Cuckoos!</string>
+        <string name="hello_msg2">This phone app starts the service.</string>
+        <string name="fail_msg">The Cuckoos are silent.</string>
+        <string name="fail_msg2">Restart the app.</string>
+        <string name="time">9 AM</string>
+    </resources>
+
