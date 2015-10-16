@@ -15,11 +15,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationListener;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.common.api.Status;
@@ -36,11 +40,15 @@ public class GPSActivity extends FragmentActivity implements
     public static String TAG = "GPSActivity";
     public static int UPDATE_INTERVAL_MS = 100;
     public static int FASTEST_INTERVAL_MS = 100;
-    private GoogleMap map;
+    private GoogleMap gMap;
+
+    private LatLng CALIFORNIA = new LatLng(37, -120);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gps);
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addApi(Wearable.API)  // used for data layer API
@@ -49,21 +57,16 @@ public class GPSActivity extends FragmentActivity implements
                 .build();
         Intent intent = getIntent();
         String data = intent.getStringExtra(MainActivity.CLICK);
-
         // Maps
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        map = mapFragment.getMap();
-        map.getMyLocation();
-        map.setMyLocationEnabled(true);
-        Log.d(TAG, data);
+        gMap = mapFragment.getMap();
+
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-
-        setContentView(R.layout.activity_gps);
 
         // Build a request for continual location updates
         LocationRequest locationRequest = LocationRequest.create()
@@ -114,8 +117,19 @@ public class GPSActivity extends FragmentActivity implements
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
+
+        // Instantiates a new CircleOptions object and defines the center and radius
+        CircleOptions circleOptions = new CircleOptions()
+                .center(CALIFORNIA)
+                .radius(20000); // In meters
+
+        // Get back the mutable Circle
+
+        gMap.addMarker(new MarkerOptions()
+                .position(CALIFORNIA));
+        gMap.clear();
+        Circle circle = gMap.addCircle(circleOptions);
+
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CALIFORNIA, 8));
     }
 }
