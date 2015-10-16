@@ -3,8 +3,10 @@ package animals.mariolin.com.yourfaultprog2;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -28,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.common.api.Status;
 
+import java.util.Arrays;
+
 /**
  * Created by Mario Lin on 10/12/15.
  */
@@ -41,7 +45,8 @@ public class GPSActivity extends FragmentActivity implements
     public static int UPDATE_INTERVAL_MS = 100;
     public static int FASTEST_INTERVAL_MS = 100;
     private GoogleMap gMap;
-
+    String magPlace;
+    double[] coordinates;
     private LatLng CALIFORNIA = new LatLng(37, -120);
 
     @Override
@@ -56,13 +61,15 @@ public class GPSActivity extends FragmentActivity implements
                 .addOnConnectionFailedListener(this)
                 .build();
         Intent intent = getIntent();
-        String data = intent.getStringExtra(MainActivity.CLICK);
+        magPlace = intent.getStringExtra(MainActivity.CLICK);
+        coordinates = intent.getDoubleArrayExtra(MainActivity.COORDINATES);
+        Log.d(TAG, magPlace);
+        Log.d(TAG, Arrays.toString(coordinates));
         // Maps
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         gMap = mapFragment.getMap();
-
     }
 
     @Override
@@ -119,17 +126,22 @@ public class GPSActivity extends FragmentActivity implements
     public void onMapReady(GoogleMap map) {
 
         // Instantiates a new CircleOptions object and defines the center and radius
+        LatLng coord = new LatLng(coordinates[1], coordinates[0]);
+        Log.d(TAG, coordinates[1] + ", " + coordinates[0]);
         CircleOptions circleOptions = new CircleOptions()
-                .center(CALIFORNIA)
-                .radius(20000); // In meters
+                .center(coord)
+                .radius(8500)
+                .fillColor(0x30ff0000)
+                .strokeColor(Color.RED).strokeWidth((float) 2.5); // In meters
+        gMap.getUiSettings().setZoomControlsEnabled(true);
+        gMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         // Get back the mutable Circle
 
         gMap.addMarker(new MarkerOptions()
-                .position(CALIFORNIA));
+                .position(coord));
         gMap.clear();
         Circle circle = gMap.addCircle(circleOptions);
-
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CALIFORNIA, 8));
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coord, 10));
     }
 }

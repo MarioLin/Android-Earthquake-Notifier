@@ -30,12 +30,17 @@ import org.json.*;
  */
 public class USGSHelper extends Service{
     private GoogleApiClient mApiClient;
-    private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2015-10-12&endtime=2015-10-14&eventtype=earthquake&orderby=time&limit=5";
+    private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&limit=5";
     private String response = "";
     private final String TAG = "USGSService";
     public static final String ACTION = "ACTION";
     double[] coordinates = new double[3];
     private static final String START_ACTIVITY = "/start_activity";
+
+    // Intent unique strings
+    public static final String MAGNITUDE = "USGSMAG";
+    public static final String PLACE = "usgsPl4c3";
+    public static final String COORDINATES = "c00rdinat3s";
 
 
     @Override
@@ -127,12 +132,12 @@ public class USGSHelper extends Service{
                         }
                         mApiClient.connect(); //connect to the API client to send a message!
                         sendMessage(START_ACTIVITY, String.valueOf(magnitude));
-                        String[] values = new String[2];
-                        values[0] = String.valueOf(magnitude);
-                        values[1] = place;
+
                         Intent intent = new Intent();
                         intent.setAction(ACTION);
-                        intent.putExtra("DATAPASSED", values);
+                        intent.putExtra(MAGNITUDE, magnitude);
+                        intent.putExtra(PLACE, place);
+                        intent.putExtra(COORDINATES, coordinates);
                         sendBroadcast(intent);
 //                        Log.d(TAG, Arrays.toString(coordinates));
 

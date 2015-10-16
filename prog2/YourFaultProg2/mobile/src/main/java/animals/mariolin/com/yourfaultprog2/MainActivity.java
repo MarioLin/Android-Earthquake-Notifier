@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
@@ -31,6 +32,9 @@ public class MainActivity extends Activity {
     MyReceiver receiver;
     private final static String TAG = "MainActivity";
     public final static String CLICK = "Click Message";
+    public final static String COORDINATES = "c00rd1nat33";
+
+    private HashMap<String, double[]> coordinateMap = new HashMap<String, double[]>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MainActivity.this, GPSActivity.class);
                 String selectedFromList = (String) (eqList.getItemAtPosition(position));
                 intent.putExtra(CLICK,selectedFromList);
+                intent.putExtra(COORDINATES, coordinateMap.get(selectedFromList));
                 startActivity(intent);
             }
         });
@@ -90,11 +95,18 @@ public class MainActivity extends Activity {
         public void onReceive(Context arg0, Intent arg1) {
             // TODO Auto-generated method stub
 
-            String[] datapassed = arg1.getStringArrayExtra("DATAPASSED");
-            Log.v(TAG, Arrays.toString(datapassed));
+            Double mag = arg1.getDoubleExtra(USGSHelper.MAGNITUDE, 0);
+            String place = arg1.getStringExtra(USGSHelper.PLACE);
+            double[] coordinates = arg1.getDoubleArrayExtra(USGSHelper.COORDINATES);
 
-            String location = datapassed[1].split("of")[1];
-            listItems.add(0, datapassed[0] + "M" + location);
+
+            String location = place.split("of")[1];
+
+            String stringValue = mag + "M" + location;
+            Log.v(TAG, stringValue);
+            Log.v(TAG, Arrays.toString(coordinates));
+            listItems.add(0, stringValue);
+            coordinateMap.put(stringValue, coordinates);
             eqList.setAdapter(listAdapter);
         }
     }
