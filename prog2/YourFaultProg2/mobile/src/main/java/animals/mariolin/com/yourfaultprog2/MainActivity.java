@@ -68,6 +68,9 @@ public class MainActivity extends Activity {
                 String selectedFromList = (String) (eqList.getItemAtPosition(position));
                 intent.putExtra(CLICK, selectedFromList);
                 intent.putExtra(COORDINATES, coordinateMap.get(selectedFromList));
+                String[] s = selectedFromList.split(" ", 2);
+                mApiClient.connect();
+                sendMessage(START_ACTIVITY, s[1] +  "\n" + s[0]);
                 startActivity(intent);
             }
         });

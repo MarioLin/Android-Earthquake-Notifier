@@ -27,7 +27,7 @@ import java.util.Scanner;
  * Created by Mario Lin on 10/12/15.
  */
 public class PhotoActivity extends Activity {
-    String instagramUrl = "https://api.instagram.com/v1/media/search?lat={lat}&lng={lng}&access_token=1931277428.2a3d32a.cd7944e7b1cf4a6f93ae0f7e692f5b0f";
+    String instagramUrl = "https://api.instagram.com/v1/media/search?lat={lat}&lng={lng}&distance=3000&access_token=1931277428.2a3d32a.cd7944e7b1cf4a6f93ae0f7e692f5b0f";
     public final String TAG = "Photos";
 
     ArrayList<String> images = new ArrayList<String>();
