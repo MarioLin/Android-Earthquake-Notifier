@@ -30,7 +30,7 @@ import org.json.*;
  */
 public class USGSHelper extends Service{
     private GoogleApiClient mApiClient;
-    private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&limit=5";
+    private String USGSUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&limit=10";
     private String response = "";
     private final String TAG = "USGSService";
     public static final String ACTION = "ACTION";
@@ -122,7 +122,7 @@ public class USGSHelper extends Service{
                         magnitude = properties.getDouble("mag");
                         place = properties.getString("place");
 
-                        Log.d(TAG, String.valueOf(magnitude));
+//                        Log.d(TAG, String.valueOf(magnitude));
 //                        Log.d(TAG, place);
 
                         jsonCoordinates = geometry.getJSONArray("coordinates");
@@ -130,8 +130,6 @@ public class USGSHelper extends Service{
                         for (int j = 0; j < jsonCoordinates.length();j++) {
                             coordinates[j] = jsonCoordinates.getDouble(j);
                         }
-                        mApiClient.connect(); //connect to the API client to send a message!
-                        sendMessage(START_ACTIVITY, String.valueOf(magnitude));
 
                         Intent intent = new Intent();
                         intent.setAction(ACTION);

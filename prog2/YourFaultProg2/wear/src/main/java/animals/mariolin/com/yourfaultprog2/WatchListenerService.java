@@ -14,15 +14,18 @@ import java.nio.charset.StandardCharsets;
 public class WatchListenerService extends WearableListenerService {
     private static final String START_ACTIVITY = "/start_activity";
     private final String TAG = "WatchListener";
+    private final String DATA = "data2";
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.d(TAG, "receicved");
+        Log.v("TAG", "received");
         if( messageEvent.getPath().equalsIgnoreCase( START_ACTIVITY ) ) {
+            Log.v("TAG", "inside");
+
             String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
             Intent intent = new Intent(this, Notification.class );
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
             //you need to add this flag since you're starting a new activity from a service
-            intent.putExtra("Magnitude", value); //propagate over the magnitude
+            intent.putExtra(DATA, value); //propagate over the hour
             startActivity(intent);
         } else {
             super.onMessageReceived( messageEvent );

@@ -14,12 +14,16 @@ public class Notification extends WearableActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //first, let's extract that extra hour information we passed over
+        setContentView(R.layout.notif);
+//        first, let's extract that extra hour information we passed over
         Intent intent = getIntent();
-        String hour = intent.getStringExtra("Magnitude"); //note this is case sensitive
+        String hour = intent.getStringExtra("Hour"); //note this is case sensitive
 
-        Log.v("DEBUG", hour);
+//        if (hour != null) {
+//            //Programmatically set the text to the actual hour.
+//            TextView time = (TextView) findViewById(R.id.time);
+//            time.setText(hour + " 'o clock");
+//        }
     }
 }
 

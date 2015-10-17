@@ -17,8 +17,16 @@ import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,9 +41,10 @@ public class MainActivity extends Activity {
     private final static String TAG = "MainActivity";
     public final static String CLICK = "Click Message";
     public final static String COORDINATES = "c00rd1nat33";
+    private static final String START_ACTIVITY = "/start_activity";
 
     private HashMap<String, double[]> coordinateMap = new HashMap<String, double[]>();
-
+    GoogleApiClient mApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +56,7 @@ public class MainActivity extends Activity {
         intentFilter.addAction(USGSHelper.ACTION);
         registerReceiver(receiver, intentFilter);
         eqList = (ListView) findViewById(R.id.eqlist);
-        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
+        listAdapter = new AlternateColorAdapter(this, android.R.layout.simple_list_item_1, listItems);
         eqList.setAdapter(listAdapter);
 
         eqList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,15 +64,49 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, GPSActivity.class);
                 String selectedFromList = (String) (eqList.getItemAtPosition(position));
-                intent.putExtra(CLICK,selectedFromList);
+                intent.putExtra(CLICK, selectedFromList);
                 intent.putExtra(COORDINATES, coordinateMap.get(selectedFromList));
                 startActivity(intent);
             }
         });
 
+
+                /* Initialize the googleAPIClient for message passing */
+        mApiClient = new GoogleApiClient.Builder( this )
+                .addApi( Wearable.API )
+                .addApi( LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle connectionHint) {
+                        /* Successfully connected */
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int cause) {
+                        /* Connection was interrupted */
+                    }
+                })
+                .build();
+
+
         Log.d("main", "start");
         Intent i = new Intent(this, USGSHelper.class);
         startService(i);
+
+
+        //Or start the fast service.
+        final Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(getBaseContext(), USGSHelper.class);
+                //we call getBaseContext instead of 'this' since this is not in the main
+                //activity but rather in an onclick.
+                startService(i);
+                Toast.makeText(MainActivity.this, "Cuckoo! Sent message to watch.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     @Override
@@ -103,11 +146,37 @@ public class MainActivity extends Activity {
             String location = place.split("of")[1];
 
             String stringValue = mag + "M" + location;
-            Log.v(TAG, stringValue);
-            Log.v(TAG, Arrays.toString(coordinates));
-            listItems.add(0, stringValue);
+//            Log.v(TAG, stringValue);
+//            Log.v(TAG, Arrays.toString(coordinates));
+
+            if (listItems.size()< 10) {
+                listItems.add(stringValue);
+            }
+            else {
+                listItems.add(0, stringValue);
+            }
             coordinateMap.put(stringValue, coordinates);
             eqList.setAdapter(listAdapter);
+            mApiClient.connect();
+            Log.d(TAG, "send");
+            sendMessage(START_ACTIVITY, stringValue); //actually send the message to the watch
+
         }
     }
+    //How to send a message to the WatchListenerService
+    private void sendMessage( final String path, final String text ) {
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes( mApiClient ).await();
+                for(Node node : nodes.getNodes()) {
+                    MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(
+                            mApiClient, node.getId(), path, text.getBytes() ).await();
+                }
+            }
+        }).start();
+    }
+
+
 }
+
