@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 public class WatchListenerService extends WearableListenerService {
     private static final String START_ACTIVITY = "/start_activity";
     private final String TAG = "WatchListener";
-    private final String DATA = "data2";
+    public static final String DATA = "data2";
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.v("TAG", "received");

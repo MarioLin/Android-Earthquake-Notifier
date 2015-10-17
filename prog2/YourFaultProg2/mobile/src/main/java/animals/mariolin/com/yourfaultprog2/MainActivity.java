@@ -148,7 +148,6 @@ public class MainActivity extends Activity {
             String stringValue = mag + "M" + location;
 //            Log.v(TAG, stringValue);
 //            Log.v(TAG, Arrays.toString(coordinates));
-
             if (listItems.size()< 10) {
                 listItems.add(stringValue);
             }
@@ -158,8 +157,8 @@ public class MainActivity extends Activity {
             coordinateMap.put(stringValue, coordinates);
             eqList.setAdapter(listAdapter);
             mApiClient.connect();
-            Log.d(TAG, "send");
-            sendMessage(START_ACTIVITY, stringValue); //actually send the message to the watch
+            Log.d(TAG, "Sending");
+            sendMessage(START_ACTIVITY, location + "\n" + String.valueOf(mag)); //actually send the message to the watch
 
         }
     }

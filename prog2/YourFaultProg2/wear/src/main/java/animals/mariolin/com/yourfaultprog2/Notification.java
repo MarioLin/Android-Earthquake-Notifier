@@ -17,13 +17,13 @@ public class Notification extends WearableActivity {
         setContentView(R.layout.notif);
 //        first, let's extract that extra hour information we passed over
         Intent intent = getIntent();
-        String hour = intent.getStringExtra("Hour"); //note this is case sensitive
+        String data = intent.getStringExtra(WatchListenerService.DATA); //note this is case sensitive
 
-//        if (hour != null) {
-//            //Programmatically set the text to the actual hour.
-//            TextView time = (TextView) findViewById(R.id.time);
-//            time.setText(hour + " 'o clock");
-//        }
+        if (data != null) {
+            //Programmatically set the text to the actual location and magnitude.
+            TextView text = (TextView) findViewById(R.id.notifdisplay);
+            text.setText(data);
+        }
     }
 }
 
