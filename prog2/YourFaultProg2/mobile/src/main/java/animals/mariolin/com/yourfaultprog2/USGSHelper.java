@@ -133,12 +133,12 @@ public class USGSHelper extends Service{
                             coordinates[j] = jsonCoordinates.getDouble(j);
                         }
 
-                        if (seen.contains(Arrays.toString(coordinates) + String.valueOf(magnitude))){
-                            continue;
-                        }
-                        else {
-                            seen.add(Arrays.toString(coordinates)+ String.valueOf(magnitude));
-                        }
+//                        if (seen.contains(Arrays.toString(coordinates) + String.valueOf(magnitude))){
+//                            continue;
+//                        }
+//                        else {
+//                            seen.add(Arrays.toString(coordinates)+ String.valueOf(magnitude));
+//                        }
 
                         Intent intent = new Intent();
                         intent.setAction(ACTION);

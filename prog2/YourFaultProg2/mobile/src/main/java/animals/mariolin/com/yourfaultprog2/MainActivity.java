@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mApiClient.connect();
-                double[] dummyCoord = {-122.4,37.8};
+                double[] dummyCoord = {-122.4, 37.8};
                 String dummyEq = "9M San Francisco, CA";
                 coordinateMap.put(dummyEq, dummyCoord);
                 listItems.add(0, dummyEq);
@@ -114,6 +114,16 @@ public class MainActivity extends Activity {
             }
         });
 
+        //Or start the fast service.
+        final Button refresh = (Button) findViewById(R.id.ref);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(getBaseContext(), USGSHelper.class);
+                //we call getBaseContext instead of 'this' since this is not in the main
+                //activity but rather in an onclick.
+                startService(i);
+            }
+        });
 
         states.put("Alabama","AL");
         states.put("Alaska","AK");
@@ -245,12 +255,12 @@ public class MainActivity extends Activity {
 //            Log.v(TAG, stringValue);
 //            Log.v(TAG, Arrays.toString(coordinates));
             Log.d(TAG, stringValue);
-
-            if (listItems.size()< 10) {
-                listItems.add(stringValue);
-            }
-            else {
-                listItems.add(0, stringValue);
+            if (!listItems.contains(stringValue)) {
+                if (listItems.size() < 10) {
+                    listItems.add(stringValue);
+                } else {
+                    listItems.add(0, stringValue);
+                }
             }
             coordinateMap.put(stringValue, coordinates);
             eqList.setAdapter(listAdapter);
