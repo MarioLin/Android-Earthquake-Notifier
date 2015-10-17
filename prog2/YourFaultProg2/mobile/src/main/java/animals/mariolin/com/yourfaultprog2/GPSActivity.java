@@ -51,7 +51,7 @@ public class GPSActivity extends FragmentActivity implements
     private GoogleMap gMap;
     String magPlace;
     double[] coordinates;
-    private LatLng CALIFORNIA = new LatLng(37, -120);
+    private LatLng CALIFORNIA = new LatLng(37, -122);
     TextView textView;
     TextView magplaceView;
     TextView distView;
