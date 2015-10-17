@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 import org.json.*;
 
@@ -42,6 +44,7 @@ public class USGSHelper extends Service{
     public static final String PLACE = "usgsPl4c3";
     public static final String COORDINATES = "c00rdinat3s";
 
+    public HashSet<String> seen = new HashSet<String>();
 
     @Override
     public void onCreate() {
@@ -124,11 +127,17 @@ public class USGSHelper extends Service{
 
 //                        Log.d(TAG, String.valueOf(magnitude));
 //                        Log.d(TAG, place);
-
                         jsonCoordinates = geometry.getJSONArray("coordinates");
 
                         for (int j = 0; j < jsonCoordinates.length();j++) {
                             coordinates[j] = jsonCoordinates.getDouble(j);
+                        }
+
+                        if (seen.contains(Arrays.toString(coordinates) + String.valueOf(magnitude))){
+                            continue;
+                        }
+                        else {
+                            seen.add(Arrays.toString(coordinates)+ String.valueOf(magnitude));
                         }
 
                         Intent intent = new Intent();
