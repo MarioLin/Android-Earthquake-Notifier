@@ -3,18 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:gravity="center" android:layout_gravity="center"
     tools:context=".MainActivity" android:orientation="vertical" tools:deviceIds="wear_round"
-    android:background="#000000">
+    android:background="#ffffff" >
 
     <TextView android:id="@+id/welcome_text" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" android:text="@string/hello_msg"
-        android:textColor="#FFFFFF" />
+        android:layout_centerVertical="true" android:text="Listening for Earthquake\n Data..."
+        android:textColor="#000000" android:textSize="15dp"
+        android:gravity="center"/>
 
-    <TextView android:id="@+id/welcome_text2" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" android:text="@string/hello_msg2"
-        android:layout_marginTop="10dp"
-        android:textColor="#FFFFFF" />
 
 </LinearLayout>
 

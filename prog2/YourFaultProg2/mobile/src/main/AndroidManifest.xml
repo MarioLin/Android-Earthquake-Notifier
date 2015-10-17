@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GPSActivity"></activity>
+        <activity android:name=".PhotoActivity"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCPzQ12Lz91sjHV0AQXGQyP8ZV-SmviU1Q"/>

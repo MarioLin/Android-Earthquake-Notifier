@@ -17,9 +17,7 @@ public class WatchListenerService extends WearableListenerService {
     public static final String DATA = "data2";
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.v("TAG", "received");
         if( messageEvent.getPath().equalsIgnoreCase( START_ACTIVITY ) ) {
-            Log.v("TAG", "inside");
 
             String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
             Intent intent = new Intent(this, Notification.class );

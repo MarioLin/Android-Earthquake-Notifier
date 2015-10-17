@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -57,7 +59,7 @@ public class GPSActivity extends FragmentActivity implements
     TextView distView;
     TextView magView;
     Map<String, String> states = new HashMap<String, String>();
-
+    Button imgBtn;
     LocationManager locationManager;
     public double currentLat;
     public double currentLong;
@@ -97,6 +99,17 @@ public class GPSActivity extends FragmentActivity implements
         // Locations
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
+
+        // Go to images
+        imgBtn = (Button) findViewById(R.id.imageBtn);
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                double[] dummyCoord = {earthquakeCoord.longitude,earthquakeCoord.latitude};
+                Intent intent = new Intent(GPSActivity.this, PhotoActivity.class);
+                intent.putExtra("extra", dummyCoord);
+                startActivity(intent);
+            }
+        });
 
         states.put("Alabama","AL");
         states.put("Alaska","AK");
