@@ -1,10 +1,5 @@
 ## README ##
 
-Repository for submitting CS160 Fall 2015 programming assignments. 
+Uses Google Location Services and Maps to display coordinates of earthquakes in real-time.
 
-* Name: Mario Lin
-* CalNetID: 23531468
-* Email: mario.lin@berkeley.edu
-* Class: CS160
-* Section: 101
-* Favorite Color: #0000ff
+For a quick demo: https://www.youtube.com/watch?v=Jc038WG7a_s
